@@ -21,3 +21,7 @@ resource "okta_group" "it_admins" {
 #   app_id   = var.example_app_id
 #   group_id = okta_group.it_engineering.id
 # }
+resource "okta_group" "it_test" {
+  name        = "IT-Test"
+  description = "Verifying CI plan-on-PR works"
+}
