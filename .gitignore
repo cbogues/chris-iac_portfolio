@@ -1,0 +1,32 @@
+# Terraform state - never commit, contains resource details and can contain secrets
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# Variable files that may contain real credentials
+terraform.tfvars
+*.tfvars
+!*.tfvars.example
+*.tfvars.json
+!*.tfvars.json.example
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# Override files (local-only overrides, shouldn't be shared)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Python (Phase 3 agent)
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# Editor/OS
+.DS_Store
+.vscode/

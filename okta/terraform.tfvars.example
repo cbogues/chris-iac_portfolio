@@ -1,0 +1,6 @@
+# Copy this file's values into environment variables instead of a committed
+# .tfvars file. This file exists only as a reference for what's needed:
+#
+#   export TF_VAR_okta_org_name="dev-12345678"
+#   export TF_VAR_okta_base_url="okta.com"
+#   export TF_VAR_okta_api_token="<your token, never committed>"

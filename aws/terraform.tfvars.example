@@ -1,0 +1,6 @@
+# Copy the values you need into a real terraform.tfvars (gitignored) or
+# export as TF_VAR_* environment variables. Don't commit real values.
+#
+# aws_region   = "us-east-1"
+# project_name = "iac-portfolio"
+# my_ip_cidr   = "203.0.113.4/32"   # get yours from https://checkip.amazonaws.com

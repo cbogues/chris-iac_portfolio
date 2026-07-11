@@ -1,0 +1,20 @@
+{
+  "resource_changes": [
+    {
+      "address": "okta_group.it_engineering",
+      "change": { "actions": ["create"] }
+    },
+    {
+      "address": "okta_group.it_admins",
+      "change": { "actions": ["create"] }
+    },
+    {
+      "address": "aws_s3_bucket.cloudtrail_logs",
+      "change": { "actions": ["no-op"] }
+    },
+    {
+      "address": "aws_security_group.ssh_from_me",
+      "change": { "actions": ["update"] }
+    }
+  ]
+}
