@@ -35,7 +35,9 @@ Expand this incrementally: add more groups, wire up real app assignments, add gr
 
 ## CI
 
-`.github/workflows/terraform-okta.yml` (repo root) runs `terraform fmt -check`, `terraform validate`, and `terraform plan` on every pull request that touches `okta/**`, and `terraform apply` on merges to `main`. It needs four repository secrets set in GitHub (Settings > Secrets and variables > Actions): `OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`.
+`.github/workflows/terraform-okta.yml` (repo root) runs `terraform fmt -check`, `terraform validate`, and `terraform plan` on every pull request that touches `okta/**`. It needs three repository secrets set in GitHub (Settings > Secrets and variables > Actions): `OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`.
+
+Plan-only, on purpose, no auto-apply. CI has no access to `terraform.tfstate` (gitignored, lives only on your laptop), so an apply job in CI has no idea what already exists in Okta and will try to recreate live resources, exactly what happened on 2026-07-11: CI's apply job tried to create `it_engineering` and `it_admins` again and got "already exists" errors from the Okta API, since those were created locally and CI had no record of it. `it_test` happened to succeed since it was genuinely new, but that left local state out of sync until it was reconciled with `terraform import`. Apply runs locally until Phase 2's remote backend (stretch goal 1 in `PROGRESS.md`) gives CI and local the same state to read from.
 
 ## Rollback
 

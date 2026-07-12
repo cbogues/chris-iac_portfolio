@@ -8,8 +8,8 @@ Baseline scope. Stretch goals are tracked separately at the bottom, don't start 
 - [x] Free Okta org created (Integrator Free Plan)
 - [x] `okta` Terraform provider configured, credentials set as env vars
 - [x] `terraform init` / `plan` / `apply` run successfully for `it_engineering` + `it_admins` groups (2026-07-10)
-- [ ] GitHub Actions secrets set (`OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`)
-- [ ] CI plan-on-PR workflow verified working (open a test PR, confirm plan output posts)
+- [x] GitHub Actions secrets set (`OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`)
+- [x] CI plan-on-PR workflow verified working (PR #1, `Terraform Okta Plan` check passed, 2026-07-10)
 - [ ] `okta/README.md` screenshots/notes added
 
 ## Phase 2: AWS (days 3-5)
@@ -30,7 +30,7 @@ Baseline scope. Stretch goals are tracked separately at the bottom, don't start 
 - [ ] Root README status line updated to reflect what's actually built
 - [ ] Architecture note added tying the three phases together
 - [ ] Resume bullets drafted (see the 4 draft bullets in `_OUTPUTS/20260709_vacation_portfolio_projects.md`), `[QUANTIFY]` placeholders filled in with real numbers
-- [ ] Repo pushed to GitHub / made public
+- [x] Repo pushed to GitHub / made public (2026-07-10, ahead of schedule via `gh repo create`)
 
 ## Stretch goals (only if ahead of schedule, in this priority order)
 - [ ] 1. Remote backend: bootstrap S3 + DynamoDB, migrate both Okta and AWS module state to it

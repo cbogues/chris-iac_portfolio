@@ -40,7 +40,7 @@ Each phase README follows the same structure: Prerequisites, Steps (numbered), E
 
 See [`okta/README.md`](okta/README.md).
 
-Goal: manage a handful of Okta groups and app-group assignments as version-controlled HCL, with `terraform plan` running automatically on every pull request via GitHub Actions, and `terraform apply` gated to merges into `main`.
+Goal: manage a handful of Okta groups and app-group assignments as version-controlled HCL, with `terraform plan` running automatically on every pull request via GitHub Actions. Apply runs locally (not from CI) until a remote backend gives CI the same state your laptop has, see `okta/README.md`'s CI section for why.
 
 ## Phase 2: AWS
 

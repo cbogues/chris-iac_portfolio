@@ -1,14 +1,18 @@
 name: Terraform Okta Plan
 
+# Plan-only. No auto-apply: CI has no access to the local Terraform state
+# file (terraform.tfstate is gitignored on purpose), so an apply job here
+# would have no idea what already exists in Okta and would try to recreate
+# resources that are already live, exactly what caused the "already exists"
+# failure on 2026-07-11. Applies run locally until a remote backend (S3 +
+# DynamoDB, stretch goal 1 in PROGRESS.md) gives CI and local the same state
+# to work from. Re-add an apply job at that point.
+
 on:
   pull_request:
     paths:
       - "okta/**"
       - ".github/workflows/terraform-okta.yml"
-  push:
-    branches: [main]
-    paths:
-      - "okta/**"
 
 jobs:
   terraform:
@@ -40,9 +44,4 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        if: github.event_name == 'pull_request'
         run: terraform plan -no-color
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve
