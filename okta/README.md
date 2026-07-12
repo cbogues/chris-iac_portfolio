@@ -49,3 +49,27 @@ terraform destroy
 ## State
 
 This phase uses local state (`terraform.tfstate` in this directory, gitignored). Phase 2 introduces a remote backend that both this module and the AWS module will migrate to, if you reach that stretch goal.
+
+## Evidence
+
+Screenshots from the 2026-07-11 verification pass, in `../docs/screenshots/`.
+
+**Local state matches reality**
+![terraform show output](../docs/screenshots/Screenshot%202026-07-11%20at%205.23.44%20PM.png)
+`terraform show` confirming all three groups (`it_engineering`, `it_admins`, `it_test`) are correctly tracked in local state after reconciling the CI state-drift issue with `terraform import`.
+
+**Groups created in Okta**
+![Okta admin console groups list](../docs/screenshots/Screenshot%202026-07-11%20at%204.44.51%20PM.png)
+Directory > Groups in the Okta admin console, showing `IT-Engineering` and `IT-Admins` alongside the org's default groups.
+
+**CI plan check passing on the PR**
+![CI check passed](../docs/screenshots/Screenshot%202026-07-11%20at%204.45.57%20PM.png)
+`Terraform Okta Plan` check passing on PR #1 before merge.
+
+**PR merged**
+![Merged pull request](../docs/screenshots/Screenshot%202026-07-11%20at%204.48.46%20PM.png)
+PR #1 merged into `main`.
+
+**Full CI run history**
+![All workflow runs](../docs/screenshots/Screenshot%202026-07-11%20at%205.04.36%20PM.png)
+The complete run history: an early failure from missing secrets (run #1), a passing plan on the PR (run #2), and the auto-apply failure that led to the CI fix documented above (run #3). Left as-is intentionally, it's a more honest record than a cleaned-up version.

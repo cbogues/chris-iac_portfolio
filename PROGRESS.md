@@ -10,7 +10,8 @@ Baseline scope. Stretch goals are tracked separately at the bottom, don't start 
 - [x] `terraform init` / `plan` / `apply` run successfully for `it_engineering` + `it_admins` groups (2026-07-10)
 - [x] GitHub Actions secrets set (`OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`)
 - [x] CI plan-on-PR workflow verified working (PR #1, `Terraform Okta Plan` check passed, 2026-07-10)
-- [ ] `okta/README.md` screenshots/notes added
+- [x] Diagnosed and fixed CI auto-apply failure (2026-07-11): CI had no access to local `terraform.tfstate`, tried to recreate `it_engineering`/`it_admins` and got "already exists" from the Okta API. Reconciled with `terraform import okta_group.it_test`, removed the auto-apply job from CI until the remote backend stretch goal exists. See `okta/README.md` CI section.
+- [x] `okta/README.md` screenshots/notes added (2026-07-11)
 
 ## Phase 2: AWS (days 3-5)
 - [ ] Personal AWS account set up (IAM user, not root credentials)
