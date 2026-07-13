@@ -14,11 +14,11 @@ Baseline scope. Stretch goals are tracked separately at the bottom, don't start 
 - [x] `okta/README.md` screenshots/notes added (2026-07-11)
 
 ## Phase 2: AWS (days 3-5)
-- [ ] Personal AWS account set up (IAM user, not root credentials)
-- [ ] `my_ip_cidr` set, `terraform plan` reviewed
-- [ ] `terraform apply` run: VPC, subnets, security group, IAM auditor role, CloudTrail
-- [ ] CloudTrail confirmed "Logging: On" in AWS Console
-- [ ] `aws/README.md` screenshots/notes added
+- [x] Personal AWS account set up (IAM user `iac-portfolio-admin`, MFA enabled, not root credentials)
+- [x] `my_ip_cidr` set, `terraform plan` reviewed (14 to add, 0 to change, 0 to destroy)
+- [x] `terraform apply` run: VPC, subnets, security group, IAM auditor role, CloudTrail (2026-07-13, 14 resources, 0 errors)
+- [x] CloudTrail confirmed "Logging: On" in AWS Console (2026-07-13)
+- [x] `aws/README.md` screenshots/notes added (2026-07-13)
 
 ## Phase 3: Agent (days 6-8)
 - [ ] Day 6: `explain_plan()` tested standalone against `sample_plan.json`
