@@ -1,14 +1,15 @@
 # chris-iac-portfolio
 
-Personal infrastructure-as-code portfolio. Three phases, each building on the last:
+Personal infrastructure-as-code portfolio. Four phases, each building on the last:
 
 ```
 Phase 1: okta/    Terraform-managed Okta identity resources (groups, app assignments)
 Phase 2: aws/     Terraform-managed AWS IAM + VPC baseline
 Phase 3: agent/   Claude + MCP agent that reads this repo's Terraform and explains it
+Phase 4: scim/    SCIM 2.0 server, provisioned FROM the real Okta org in Phase 1
 ```
 
-Status: **All three phases scaffolded, none started.** Each has a runnable starting point plus a guided README (Prerequisites, Steps, Expected Output, Rollback, Edge Cases) so you're following a checklist, not staring at a blank file.
+Status: **Phases 1-3 complete and verified.** Phase 4 scaffolded, not started. See `PROGRESS.md` for the detailed checklist. Each phase has a guided README (Prerequisites, Steps, Expected Output, Rollback, Edge Cases) so it's a checklist to follow, not a blank file to stare at.
 
 ## Why this repo exists
 
@@ -20,19 +21,21 @@ Built to get hands-on, shippable reps with Terraform, AWS, and Claude/MCP tool-c
 - A free [Okta Developer Edition](https://developer.okta.com/signup/) org (separate from any employer Okta org)
 - A personal AWS account, free tier (separate from any employer account)
 - Python 3.10+ and an Anthropic API key, for Phase 3
+- [ngrok](https://ngrok.com/download) (free tier), for Phase 4
 - A GitHub repo with Actions enabled, and three Okta repository secrets: `OKTA_ORG_NAME`, `OKTA_BASE_URL`, `OKTA_API_TOKEN`
 - Never commit real credentials. `.tfvars`, `.tfstate`, and `.env` files are gitignored.
 
-## 9-day guided plan (baseline scope, remote backend + explain-resource are stretch goals)
+## Guided plan (baseline scope, remote backend + explain-resource are stretch goals)
 
-| Day | Phase | Do this | Guide |
-|---|---|---|---|
-| 1-2 | Okta | Dev org, provider setup, manage 2 groups as HCL, CI plan-on-PR | [`okta/README.md`](okta/README.md) |
-| 3-5 | AWS | Account setup, IAM role, VPC/subnets/security group, CloudTrail | [`aws/README.md`](aws/README.md) |
-| 6 | Agent | Get `explain_plan` working standalone against `sample_plan.json` | [`agent/README.md`](agent/README.md), Day 6 section |
-| 7 | Agent | Wire Claude tool-calling in `claude_agent.py` (the TODO stub) | [`agent/README.md`](agent/README.md), Day 7 section |
-| 8 | Agent | Test against a real plan from Phase 1/2, tune | [`agent/README.md`](agent/README.md), Day 8 section |
-| 9 | Polish | Update this README's status, screenshots, resume bullets, publish | — |
+Originally scoped as 9 days; Phases 1-3 ended up taking 3, see `PROGRESS.md` for the real timeline.
+
+| Phase | Do this | Guide |
+|---|---|---|
+| 1: Okta | Dev org, provider setup, manage 2 groups as HCL, CI plan-on-PR | [`okta/README.md`](okta/README.md) |
+| 2: AWS | Account setup, IAM role, VPC/subnets/security group, CloudTrail | [`aws/README.md`](aws/README.md) |
+| 3: Agent | Get `explain_plan` working, then wire Claude tool-calling, then test against a real plan | [`agent/README.md`](agent/README.md) |
+| 4: SCIM | Build + test locally, expose via ngrok, provision a real user from Okta | [`scim/README.md`](scim/README.md) |
+| Polish | Update this README's status, screenshots, resume bullets, publish | — |
 
 Each phase README follows the same structure: Prerequisites, Steps (numbered), Expected Output (so you know when you're actually done, not just "it ran"), Rollback, and Edge Cases (the specific things likely to trip you up, called out in advance instead of discovered mid-debug).
 
@@ -53,6 +56,12 @@ Goal: least-privilege IAM role, a VPC with public/private subnets and a scoped s
 See [`agent/README.md`](agent/README.md).
 
 Goal: an MCP server exposing an `explain_plan` tool that reads `terraform plan` JSON output and produces a plain-English summary, wired to Claude via tool-calling in `claude_agent.py`.
+
+## Phase 4: SCIM server
+
+See [`scim/README.md`](scim/README.md).
+
+Goal: a SCIM 2.0 server (FastAPI, RFC 7643/7644) provisioned FROM the real Okta org in Phase 1, not just tested with curl. Proves protocol-level identity understanding (SCIM create/PATCH-deactivate/group membership) instead of admin-console framing. Optionally deployable onto Phase 2's AWS infra instead of the default `ngrok` tunnel.
 
 ## License
 
