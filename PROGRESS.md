@@ -29,10 +29,10 @@ Baseline scope. Stretch goals are tracked separately at the bottom, don't start 
 
 ## Phase 4: SCIM server (promoted from stretch goal 3, 2026-07-12)
 
-Promoted from a standalone follow-on to a full phase because it genuinely integrates with Phases 1 and 2 (provisioned from the real Okta org, optionally deployable to the AWS infra) instead of standing alone. Scaffolded, not started.
+Promoted from a standalone follow-on to a full phase because it genuinely integrates with Phases 1 and 2 (provisioned from the real Okta org, optionally deployable to the AWS infra) instead of standing alone.
 
-- [ ] Local venv set up, `pip install -r requirements.txt`, `.env` token generated
-- [ ] `pytest` passing (6 tests: auth, create, duplicate rejection, filter lookup, PATCH-deactivate, group membership)
+- [x] Local venv set up, `pip install -r requirements.txt`, `.env` token generated (2026-07-16)
+- [x] `pytest` passing (6 tests: auth, create, duplicate rejection, filter lookup, PATCH-deactivate, group membership) (2026-07-16)
 - [ ] Server sanity-checked locally with `curl`
 - [ ] `ngrok` tunnel live, Okta SCIM test app configured and "Test API Credentials" passing
 - [ ] Real user provisioned from Okta, confirmed on the server side
