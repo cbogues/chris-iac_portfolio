@@ -33,12 +33,12 @@ Promoted from a standalone follow-on to a full phase because it genuinely integr
 
 - [x] Local venv set up, `pip install -r requirements.txt`, `.env` token generated (2026-07-16)
 - [x] `pytest` passing (6 tests: auth, create, duplicate rejection, filter lookup, PATCH-deactivate, group membership) (2026-07-16)
-- [ ] Server sanity-checked locally with `curl`
-- [ ] `ngrok` tunnel live, Okta SCIM test app configured and "Test API Credentials" passing
-- [ ] Real user provisioned from Okta, confirmed on the server side
-- [ ] Real deactivation (PATCH) triggered from Okta, confirmed on the server side
-- [ ] Group membership push from Okta confirmed
-- [ ] `scim/README.md` evidence/screenshots added
+- [x] Server sanity-checked locally with `curl` (2026-07-16, empty Resources list, totalResults 0)
+- [x] `ngrok` tunnel live, Okta SCIM test app configured and "Test API Credentials" passing (2026-07-16, verified via ngrok inspector at 127.0.0.1:4040 that the request/token matched)
+- [x] Real user provisioned from Okta, confirmed on the server side (2026-07-16, `GET .../Users?filter=userName eq "chris.bogues@protonmail.com"` then `POST /scim/v2/Users` -> 201 Created, from Okta's real IP 44.238.82.114)
+- [x] Real deactivation (PATCH) triggered from Okta, confirmed on the server side (2026-07-16, unassigned in Okta -> `PATCH /scim/v2/Users/{id}` 200 OK from a second Okta IP -> confirmed `"active": false` via curl, timestamps show created 04:27:31, deactivated 04:30:48)
+- [x] Group membership push from Okta confirmed (2026-07-16, `POST /scim/v2/Groups` 201 Created for the pushed group, followed by two `PATCH /scim/v2/Groups/{id}` 200 OK calls for membership sync)
+- [x] `scim/README.md` evidence/screenshots added (2026-07-16, request log + troubleshooting notes; screenshots optional/not added)
 
 ## Polish
 - [ ] Root README status line updated to reflect what's actually built

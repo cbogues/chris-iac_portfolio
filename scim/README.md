@@ -86,3 +86,49 @@ Stop the server (`Ctrl+C`), stop `ngrok` (`Ctrl+C` in its terminal), and in Okta
 - **Okta requires HTTPS.** `ngrok` handles this for you (it terminates TLS and forwards to your plain HTTP `localhost:8000`), don't try to point Okta at a bare `http://` URL.
 - **In-memory storage means one process only.** If you run the server with multiple workers (`uvicorn --workers 2`), each gets its own empty `_USERS`/`_GROUPS` and they won't agree with each other. Keep it single-process for this exercise.
 - **Optional stretch: deploy to AWS instead of `ngrok`.** You could run this on the EC2 instance / public subnet from Phase 2 for a permanent endpoint instead of an ephemeral tunnel, but that requires real TLS termination (a cert via ACM + an ALB, or Caddy/nginx with Let's Encrypt on the instance) and a new security group rule opening the app port to `0.0.0.0/0` (SCIM has to be reachable from Okta's servers, not just your IP, unlike the SSH rule from Phase 2). That's a meaningfully bigger lift than the `ngrok` path, treat it as a follow-on if you want the extra AWS/networking reps, not a requirement to finish this phase.
+
+## Evidence
+
+Verification pass from 2026-07-16, against the real Okta org from Phase 1 via an `ngrok` tunnel. Screenshots in `../docs/screenshots/` where noted; the request log below is pulled directly from the running server's terminal output since it's more useful as text than as an image.
+
+**Okta credentials verified**
+![SCIM 2.0 Test App verified successfully](../docs/screenshots/Screenshot%202026-07-16%20at%207.24.28%20PM.png)
+"Test API Credentials" succeeding, confirming Okta could authenticate against the live `ngrok`-tunneled server.
+
+**Group pushed and active**
+![Push Groups showing IT-Admins active](../docs/screenshots/Screenshot%202026-07-16%20at%207.25.27%20PM.png)
+`IT-Admins` (the same group from Phase 1's Okta module) pushed to the SCIM app, status "Active", last push timestamped.
+
+### Troubleshooting notes (kept, not cleaned up, same policy as Phase 1's CI evidence)
+
+- **"Provided Base URL does not match required pattern"**: hit this first, on a syntactically valid `https://` URL. Turned out to be a stale inline validation message from the form field, resolved by retyping the value cleanly.
+- **"Invalid or missing bearer token" despite pasting the token correctly**: the Okta field expects the raw token only. Okta constructs the full `Authorization: Bearer <value>` header itself, if you type `Bearer <token>` into the field, the real request becomes `Authorization: Bearer Bearer <token>`, which the server correctly rejects. Confirmed by inspecting the actual outbound request in the `ngrok` local inspector at `127.0.0.1:4040`, that's what caught it, guessing from the error message alone wasn't enough.
+
+### Real request log (chronological, from the server's terminal)
+
+```
+GET   /scim/v2/Groups                                                    200 OK
+GET   /scim/v2/Users?filter=userName eq "chris.bogues@protonmail.com"    200 OK
+POST  /scim/v2/Users                                                     201 Created
+PATCH /scim/v2/Users/7a328083-07f4-439f-bcef-77d2c6da7f51                200 OK   # deactivation (unassigned from app)
+POST  /scim/v2/Groups                                                    201 Created
+GET   /scim/v2/Groups                                                    200 OK
+PATCH /scim/v2/Users/7a328083-07f4-439f-bcef-77d2c6da7f51                200 OK   # reactivation (reassigned to app)
+GET   /scim/v2/Users                                                     200 OK
+GET   /scim/v2/Users/7a328083-07f4-439f-bcef-77d2c6da7f51                200 OK
+PUT   /scim/v2/Users/7a328083-07f4-439f-bcef-77d2c6da7f51                200 OK
+GET   /scim/v2/Groups/82e28978-3a07-44a0-aaba-fc6c242c13da               200 OK
+PATCH /scim/v2/Groups/82e28978-3a07-44a0-aaba-fc6c242c13da               200 OK   # membership sync
+PATCH /scim/v2/Groups/82e28978-3a07-44a0-aaba-fc6c242c13da               200 OK   # membership sync
+```
+
+Every request originated from Okta's real infrastructure (source IPs `44.238.82.114` and `35.81.223.96`, visible in the `ngrok` inspector), not from `curl` or a test script.
+
+### Server-side confirmation of the deactivation
+
+```
+$ curl -H "Authorization: Bearer $TOKEN" http://localhost:8000/scim/v2/Users/7a328083-07f4-439f-bcef-77d2c6da7f51
+{"schemas":["urn:ietf:params:scim:schemas:core:2.0:User"],"id":"7a328083-07f4-439f-bcef-77d2c6da7f51","userName":"chris.bogues@protonmail.com","name":{"givenName":"Chris","familyName":"Bogues"},"emails":[{"primary":true,"value":"chris.bogues@protonmail.com","type":"work"}],"active":false,"meta":{"resourceType":"User","created":"2026-07-17T04:27:31Z","lastModified":"2026-07-17T04:30:48Z"}}
+```
+
+`active: false`, confirming the PATCH from Okta actually took effect, not just that a 200 was returned.
