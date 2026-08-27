@@ -41,9 +41,9 @@ Promoted from a standalone follow-on to a full phase because it genuinely integr
 - [x] `scim/README.md` evidence/screenshots added (2026-07-16, request log + troubleshooting notes; screenshots optional/not added)
 
 ## Polish
-- [ ] Root README status line updated to reflect what's actually built
-- [ ] Architecture note added tying all four phases together
-- [ ] Resume bullets drafted (see the 4 draft bullets in `_OUTPUTS/20260709_vacation_portfolio_projects.md`, plus a new one for the SCIM phase), `[QUANTIFY]` placeholders filled in with real numbers
+- [x] Root README status line updated to reflect what's actually built (2026-07-16)
+- [x] Architecture note added tying all four phases together (2026-07-16)
+- [x] Resume bullets drafted (2026-07-16): 5 bullets with real numbers (3 Okta groups, 14 AWS resources, `explain_plan` MCP tool, 6/6 SCIM tests) in `_OUTPUTS/20260709_vacation_portfolio_projects.md` and added as Theme 7 in `master_bullets_v1.md`, no `[QUANTIFY]` placeholders remaining
 - [x] Repo pushed to GitHub / made public (2026-07-10, ahead of schedule via `gh repo create`)
 
 ## Stretch goals (only if ahead of schedule, in this priority order)

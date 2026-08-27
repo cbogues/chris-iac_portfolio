@@ -9,7 +9,7 @@ Phase 3: agent/   Claude + MCP agent that reads this repo's Terraform and explai
 Phase 4: scim/    SCIM 2.0 server, provisioned FROM the real Okta org in Phase 1
 ```
 
-Status: **Phases 1-3 complete and verified.** Phase 4 scaffolded, not started. See `PROGRESS.md` for the detailed checklist. Each phase has a guided README (Prerequisites, Steps, Expected Output, Rollback, Edge Cases) so it's a checklist to follow, not a blank file to stare at.
+Status: **All four phases complete and verified**, built in 4 real days against a 9-day plan. See `PROGRESS.md` for the detailed checklist and dates. Each phase has a guided README (Prerequisites, Steps, Expected Output, Rollback, Edge Cases) so it's a checklist to follow, not a blank file to stare at.
 
 ## Why this repo exists
 
@@ -38,6 +38,29 @@ Originally scoped as 9 days; Phases 1-3 ended up taking 3, see `PROGRESS.md` for
 | Polish | Update this README's status, screenshots, resume bullets, publish | — |
 
 Each phase README follows the same structure: Prerequisites, Steps (numbered), Expected Output (so you know when you're actually done, not just "it ran"), Rollback, and Edge Cases (the specific things likely to trip you up, called out in advance instead of discovered mid-debug).
+
+## Architecture
+
+Not four disconnected exercises, one progression, each phase reusing or connecting to what came before:
+
+```
+Phase 1 (Okta)          Phase 2 (AWS)              Phase 3 (Agent)                Phase 4 (SCIM)
+Terraform + one    -->  Terraform + a second  -->  Claude + MCP, reads      -->   FastAPI server,
+identity provider,      provider (cloud IAM/       and explains the              provisioned FROM
+local state, PR-only    networking), same IaC      terraform plan output         the real Okta org
+CI (see below for       discipline extended         from Phases 1-2               in Phase 1, not
+why apply stays          to a new domain                                          a mock IdP
+local, not CI)
+```
+
+The connective tissue is real, not narrative dressing:
+
+- **Phase 3 reads Phase 1 and 2's actual output.** `explain_plan` was tested against a real `terraform plan -json` generated from the `okta/` module, not just the bundled sample file.
+- **Phase 4 is provisioned by the real Okta org from Phase 1.** The `IT-Admins` group created by Terraform in Phase 1 is the same group pushed through SCIM in Phase 4, visible in the Phase 4 evidence screenshots.
+- **Phase 1's CI pipeline and Phase 4's Okta integration both surfaced real bugs**, documented rather than cleaned up: a state-drift issue when CI tried to apply without shared state (Phase 1), and an Okta form-field quirk plus a bearer-token double-prefix bug caught only by inspecting live request headers (Phase 4). Diagnosing and fixing both, with the evidence kept, is a better interview story than four clean runs.
+- **Phase 4 is deployable onto Phase 2's AWS infra** as a documented (not required) next step, instead of the default `ngrok` tunnel.
+
+Skill progression across the four phases: single-provider Terraform with local state, to multi-provider Terraform plus cloud networking/IAM, to an AI layer that operates on the infrastructure just built, to a protocol-level identity service that the very first phase's IdP actually talks to.
 
 ## Phase 1: Okta
 
